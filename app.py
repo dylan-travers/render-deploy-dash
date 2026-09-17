@@ -1,24 +1,28 @@
-from dash import Dash, html, dcc
-import plotly.express as px
+from dash import html, Dash, page_registry, page_container
+import dash_bootstrap_components as dbc
 
-app = Dash(__name__)
+app = Dash(__name__,
+    use_pages=True,
+    external_stylesheets=[dbc.themes.BOOTSTRAP]
+)
 
-server = app.server
+sidebar = html.Div([
+    html.Img(src='assets/img/logo.png', className="logo"),
+    html.Hr(),
+    dbc.Nav([
+            dbc.NavLink(
+                children=[html.Div(page["name"], className="ms-2")],
+                href=page["path"],
+                active="exact"
+            )
+            for page in page_registry.values()
+        ],
+        vertical=True)
+], className='sidebar')
 
-df = px.data.iris()
+content = html.Div(page_container, className='body')
 
-fig = px.scatter(df, x="sepal_width", y="petal_length", color="species")
+app.layout = html.Div([sidebar, content])
 
-app.layout = html.Div(children=[
-    html.H1(children='Hello Dash'),
-
-    html.Div(children='''
-        Dash: A web application framework for your data.
-    '''),
-
-    dcc.Graph(id='graph', figure=fig)
-])
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
-
