@@ -4,6 +4,6 @@ register_page(__name__, path='/', name='Home')
 
 layout = html.Div([
 
-    html.P('Home page')
+    html.P('Bonjour à tous ! Voici notre travail sur notre initiation à Dash et Git'),
 
 ])
